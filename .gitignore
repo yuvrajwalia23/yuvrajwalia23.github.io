@@ -1,0 +1,6 @@
+/.quarto/
+**/*.quarto_ipynb
+
+**/.ipynb_checkpoints/
+.DS_Store
+node_modules/
