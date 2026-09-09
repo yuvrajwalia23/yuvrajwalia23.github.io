@@ -1,16 +1,30 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Milestone-2",
+    "objectID": "posts/first-weeks/index.html",
+    "href": "posts/first-weeks/index.html",
+    "title": "My first weeks in MDS",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+    "text": "Orientation day on campus."
+  },
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "Blog",
+    "section": "",
+    "text": "My first weeks in MDS\n\n\n\n\n\n\n\n\nAug 9, 2026\n\n\nYuvraj Singh Walia\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "About this site"
+    "text": "Hi, I’m Yuvraj Singh Walia!\nI am from India, where I completed my Bachelor of Technology in Computer Science and Engineering. I have always been fascinated by data and the way it can be used to uncover insights, solve problems, and support better decision-making. This interest is what motivated me to pursue the Master of Data Science (MDS) program at the University of British Columbia (UBC).\nBefore starting my MDS journey, I worked as a Quality Analyst as part of a product team. This experience gave me the opportunity to work closely with software products, testing, problem-solving, and different stages of the development process. It also strengthened my interest in working with data and technology to understand problems and build meaningful solutions.\nI am excited to continue developing my skills in Data Science, analytics, and machine learning throughout my time at UBC. I look forward to learning from new challenges, collaborating with others, and exploring where this journey in Data Science takes me.\nOutside of Data Science, I enjoy exploring my creative side through music and poetry. I love listening to music and occasionally writing my own songs and poems whenever inspiration strikes. I also enjoy meeting new people, having meaningful conversations, and learning from different perspectives and experiences. I like trying new things, exploring new places, and making the most of new experiences. As I begin this new chapter at UBC, I’m looking forward to building new connections, discovering new interests, and creating memorable experiences along the way."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Yuvraj Singh Walia",
+    "section": "",
+    "text": "Hi, I’m Yuvraj Singh Walia, originally from India, where I completed my Bachelor of Technology in Computer Science and Engineering. My curiosity about data, technology, and the ways they can be used to solve real-world problems led me to pursue the Master of Data Science at UBC. Before starting this journey, I worked as a Quality Analyst on a product team, where I gained valuable experience in problem-solving, software testing, and working with technology-driven products. Outside of academics and Data Science, I enjoy listening to music, writing songs and poetry, meeting new people, and learning from different perspectives. I’m excited to make the most of my time at UBC, continue growing both personally and professionally, and explore where my journey in Data Science takes me."
   }
 ]

@@ -3,12 +3,15 @@ project:
   output-dir: docs
 
 website:
-  title: "Milestone-2"
+  title: "Yuvraj Singh Walia"
   navbar:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
+      - href: about.qmd
+        text: About
+      - href: blog.qmd
+        text: Blog
 
 format:
   html:

@@ -2,4 +2,12 @@
 title: "About"
 ---
 
-About this site
+Hi, I’m **Yuvraj Singh Walia**!
+
+I am from India, where I completed my **Bachelor of Technology in Computer Science and Engineering**. I have always been fascinated by data and the way it can be used to uncover insights, solve problems, and support better decision-making. This interest is what motivated me to pursue the **Master of Data Science (MDS) program at the University of British Columbia (UBC)**.
+
+Before starting my MDS journey, I worked as a **Quality Analyst** as part of a product team. This experience gave me the opportunity to work closely with software products, testing, problem-solving, and different stages of the development process. It also strengthened my interest in working with data and technology to understand problems and build meaningful solutions.
+
+I am excited to continue developing my skills in **Data Science, analytics, and machine learning** throughout my time at UBC. I look forward to learning from new challenges, collaborating with others, and exploring where this journey in Data Science takes me.
+
+Outside of Data Science, I enjoy exploring my creative side through **music and poetry**. I love listening to music and occasionally writing my own songs and poems whenever inspiration strikes. I also enjoy **meeting new people, having meaningful conversations, and learning from different perspectives and experiences**. I like trying new things, exploring new places, and making the most of new experiences. As I begin this new chapter at UBC, I’m looking forward to building new connections, discovering new interests, and creating memorable experiences along the way.

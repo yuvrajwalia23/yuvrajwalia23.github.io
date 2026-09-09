@@ -1,7 +1,8 @@
 ---
-title: "Milestone-2"
+title: "Yuvraj Singh Walia"
+about:
+    template: jolla
+    image: images/sky-clouds-blue-skies.jpg
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Hi, I’m **Yuvraj Singh Walia**, originally from India, where I completed my Bachelor of Technology in Computer Science and Engineering. My curiosity about data, technology, and the ways they can be used to solve real-world problems led me to pursue the **Master of Data Science at UBC**. Before starting this journey, I worked as a Quality Analyst on a product team, where I gained valuable experience in problem-solving, software testing, and working with technology-driven products. Outside of academics and Data Science, I enjoy listening to music, writing songs and poetry, meeting new people, and learning from different perspectives. I’m excited to make the most of my time at UBC, continue growing both personally and professionally, and explore where my journey in Data Science takes me.
