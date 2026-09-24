@@ -1,0 +1,179 @@
+---
+title: "Exploring the Palmer Penguins with Python"
+author: "Yuvraj Singh Walia"
+date: "2026-09-23"
+format: html
+---
+
+## Introduction
+
+In this post, I explore the Palmer Penguins dataset using Python. I will compare
+the body measurements of different penguin species and investigate the
+relationship between flipper length and body mass.
+
+Data: [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/),
+Palmer Station Antarctica LTER.
+
+The Palmer Penguins dataset was collected by Dr. Kristen Gorman and the
+Palmer Station Long Term Ecological Research program. The dataset is available
+under the CC0 licence.
+
+## Checking the Python environment
+
+First, I check which Python executable is being used when this post is rendered.
+
+```{python}
+import sys
+print(sys.executable)
+```
+
+The path should point to the `.venv` directory inside this repository.
+
+## Loading the data
+
+I load the Palmer Penguins dataset and inspect the first few observations.
+
+```{python}
+#| warning: false
+from palmerpenguins import load_penguins
+import pandas as pd
+import matplotlib.pyplot as plt
+
+penguins = load_penguins()
+penguins.head()
+
+```
+## Understanding the dataset
+
+Before comparing the penguin species, I first examine the size of the dataset,
+the available variables, and the amount of missing data.
+
+```{python}
+print(f"Number of observations: {penguins.shape[0]}")
+print(f"Number of variables: {penguins.shape[1]}")
+
+missing_values = penguins.isna().sum()
+missing_values
+```
+
+The dataset contains measurements and identifying information for individual
+penguins. Checking the missing values is important because incomplete
+observations could affect calculations involving body measurements.
+
+I will focus on species, flipper length, and body mass. I remove observations
+that are missing either of the two numerical measurements needed for the
+analysis.
+
+```{python}
+analysis_penguins = (
+    penguins[
+        ["species", "flipper_length_mm", "body_mass_g"]
+    ]
+    .dropna()
+)
+
+print(f"Rows before removing missing values: {len(penguins)}")
+print(f"Rows after removing missing values: {len(analysis_penguins)}")
+
+analysis_penguins.head()
+```
+
+After removing observations with missing flipper-length or body-mass values,
+the remaining data can be used to compare the three penguin species and study
+the relationship between these measurements.
+
+## Comparing the penguin species
+
+Next, I calculate the number of penguins and the average flipper length and
+body mass for each species.
+
+```{python}
+species_summary = (
+    analysis_penguins
+    .groupby("species")
+    .agg(
+        number_of_penguins=("species", "size"),
+        mean_flipper_length_mm=("flipper_length_mm", "mean"),
+        mean_body_mass_g=("body_mass_g", "mean")
+    )
+    .round(1)
+)
+
+species_summary
+```
+
+The summary shows clear differences between the three species. Gentoo penguins
+have the greatest average body mass and the longest average flipper length,
+while Adelie penguins are smaller on average. Chinstrap penguins fall between
+the other two species for these measurements.
+
+## Relationship between flipper length and body mass
+
+To investigate whether larger penguins tend to have longer flippers, I plot
+flipper length against body mass and distinguish the points by species.
+
+```{python}
+#| label: fig-flipper-body-mass
+#| fig-cap: "Relationship between flipper length and body mass for Palmer penguins."
+
+fig, ax = plt.subplots(figsize=(8, 5))
+
+for species, group in analysis_penguins.groupby("species", observed=True):
+    ax.scatter(
+        group["flipper_length_mm"],
+        group["body_mass_g"],
+        label=species,
+        alpha=0.7
+    )
+
+ax.set_xlabel("Flipper length (mm)")
+ax.set_ylabel("Body mass (g)")
+ax.set_title("Body mass and flipper length by species")
+ax.legend(title="Species")
+
+plt.show()
+```
+
+The plot shows a positive relationship between flipper length and body mass.
+Penguins with longer flippers generally have greater body mass. The species
+also form distinct groups, with Gentoo penguins tending to be both heavier and
+longer-flippered than Adelie and Chinstrap penguins.
+
+## Measuring the relationship
+
+The scatter plot suggests that flipper length and body mass are positively
+related. I calculate the correlation between these two measurements for each
+species to quantify that relationship.
+
+```{python}
+correlations = (
+    analysis_penguins
+    .groupby("species")
+    .apply(
+        lambda group: group["flipper_length_mm"].corr(group["body_mass_g"]),
+        include_groups=False
+    )
+    .rename("correlation")
+    .round(3)
+)
+
+correlations
+```
+
+A positive correlation means that penguins with longer flippers also tend to
+have greater body mass within that species. Comparing the values across the
+three species shows whether this relationship is similar or different among
+Adelie, Chinstrap, and Gentoo penguins.
+
+## Conclusion
+
+This analysis explored body measurements in the Palmer Penguins dataset using
+Python. After checking and cleaning the data, I compared average flipper length
+and body mass across species and visualized the relationship between these two
+measurements.
+
+The results show clear differences in body size among the penguin species. The
+scatter plot and correlation calculations also show that flipper length and
+body mass are positively associated within the data. Overall, the analysis
+demonstrates how data cleaning, grouping, summary statistics, and visualization
+can be used together to investigate patterns in a biological dataset.

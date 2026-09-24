@@ -1,0 +1,144 @@
+---
+title: "Exploring Palmer Penguins with R"
+author: "Yuvraj Singh Walia"
+date: "2026-09-23"
+format: html
+---
+
+## Introduction
+
+In this post, I explore the Palmer Penguins dataset using R. I will compare
+body mass across penguin species and investigate how bill measurements differ
+between species.
+
+Data: [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/),
+Palmer Station Antarctica LTER.
+
+The Palmer Penguins dataset was collected by Dr. Kristen Gorman and the
+Palmer Station Long Term Ecological Research program. The dataset is available
+under the CC0 licence.
+
+## Loading the data
+
+I load the Palmer Penguins package and inspect the first few observations.
+
+```{r}
+library(palmerpenguins)
+
+penguins <- palmerpenguins::penguins
+head(penguins)
+```
+
+## Understanding the dataset
+
+I first check the size of the dataset and count the missing values in each
+variable.
+
+```{r}
+cat("Number of observations:", nrow(penguins), "\n")
+cat("Number of variables:", ncol(penguins), "\n")
+
+colSums(is.na(penguins))
+```
+
+The dataset contains measurements for individual penguins from three species.
+Some variables contain missing observations, so these need to be considered
+before calculating summaries.
+
+## Preparing the data
+
+For this analysis, I focus on species, body mass, bill length, and bill depth.
+I remove rows that have missing values in any of these variables.
+
+```{r}
+analysis_penguins <- penguins[
+  complete.cases(
+    penguins[, c("species", "body_mass_g", "bill_length_mm", "bill_depth_mm")]
+  ),
+  c("species", "body_mass_g", "bill_length_mm", "bill_depth_mm")
+]
+
+cat("Rows before removing missing values:", nrow(penguins), "\n")
+cat("Rows after removing missing values:", nrow(analysis_penguins), "\n")
+
+head(analysis_penguins)
+```
+
+Removing incomplete observations ensures that the summaries and plots below
+are based on penguins with all of the measurements required for this analysis.
+
+## Comparing species
+
+Next, I calculate the average body mass, bill length, and bill depth for each
+penguin species.
+
+```{r}
+species_summary <- aggregate(
+  cbind(body_mass_g, bill_length_mm, bill_depth_mm) ~ species,
+  data = analysis_penguins,
+  FUN = mean
+)
+
+species_summary[, -1] <- round(species_summary[, -1], 1)
+
+species_summary
+```
+
+The summary shows that the three species differ in their typical body
+measurements. Gentoo penguins have the greatest average body mass, while the
+species also show noticeable differences in average bill length and bill depth.
+
+## Body mass by species
+
+To see the differences in body mass more clearly, I create a boxplot for the
+three penguin species.
+
+```{r}
+#| label: fig-body-mass-species
+#| fig-cap: "Distribution of body mass across the three Palmer penguin species."
+
+boxplot(
+  body_mass_g ~ species,
+  data = analysis_penguins,
+  xlab = "Species",
+  ylab = "Body mass (g)",
+  main = "Body mass by penguin species"
+)
+```
+
+The figure shows clear differences in body mass among the species. Gentoo
+penguins tend to have higher body mass values than Adelie and Chinstrap
+penguins.
+
+## Relationship between bill measurements
+
+Finally, I calculate the correlation between bill length and bill depth
+separately for each species.
+
+```{r}
+bill_correlations <- sapply(
+  split(analysis_penguins, analysis_penguins$species),
+  function(group) {
+    cor(group$bill_length_mm, group$bill_depth_mm)
+  }
+)
+
+round(bill_correlations, 3)
+```
+
+These values show how bill length and bill depth are related within each
+species. Calculating the correlations separately avoids mixing the three
+species together when examining this relationship.
+
+## Conclusion
+
+This analysis used R to explore differences in body and bill measurements
+among Palmer penguin species. After checking for missing data and preparing a
+complete dataset, I compared average measurements across species and
+visualized the distribution of body mass.
+
+The results show clear differences among Adelie, Chinstrap, and Gentoo
+penguins. Gentoo penguins are heavier on average, and the species also differ
+in their bill measurements. The analysis demonstrates how data cleaning,
+summary statistics, visualization, and correlation can be used to explore a
+biological dataset in R.

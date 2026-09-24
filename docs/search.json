@@ -1,17 +1,87 @@
 [
   {
+    "objectID": "posts/r-penguins/index.html",
+    "href": "posts/r-penguins/index.html",
+    "title": "Exploring Palmer Penguins with R",
+    "section": "",
+    "text": "In this post, I explore the Palmer Penguins dataset using R. I will compare body mass across penguin species and investigate how bill measurements differ between species.\nData: Palmer Penguins, Palmer Station Antarctica LTER.\nThe Palmer Penguins dataset was collected by Dr. Kristen Gorman and the Palmer Station Long Term Ecological Research program. The dataset is available under the CC0 licence."
+  },
+  {
+    "objectID": "posts/r-penguins/index.html#introduction",
+    "href": "posts/r-penguins/index.html#introduction",
+    "title": "Exploring Palmer Penguins with R",
+    "section": "",
+    "text": "In this post, I explore the Palmer Penguins dataset using R. I will compare body mass across penguin species and investigate how bill measurements differ between species.\nData: Palmer Penguins, Palmer Station Antarctica LTER.\nThe Palmer Penguins dataset was collected by Dr. Kristen Gorman and the Palmer Station Long Term Ecological Research program. The dataset is available under the CC0 licence."
+  },
+  {
+    "objectID": "posts/r-penguins/index.html#loading-the-data",
+    "href": "posts/r-penguins/index.html#loading-the-data",
+    "title": "Exploring Palmer Penguins with R",
+    "section": "Loading the data",
+    "text": "Loading the data\nI load the Palmer Penguins package and inspect the first few observations.\n\nlibrary(palmerpenguins)\n\n\nAttaching package: 'palmerpenguins'\n\n\nThe following objects are masked from 'package:datasets':\n\n    penguins, penguins_raw\n\npenguins &lt;- palmerpenguins::penguins\nhead(penguins)\n\n  species    island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g\n1  Adelie Torgersen           39.1          18.7               181        3750\n2  Adelie Torgersen           39.5          17.4               186        3800\n3  Adelie Torgersen           40.3          18.0               195        3250\n4  Adelie Torgersen             NA            NA                NA          NA\n5  Adelie Torgersen           36.7          19.3               193        3450\n6  Adelie Torgersen           39.3          20.6               190        3650\n     sex year\n1   male 2007\n2 female 2007\n3 female 2007\n4   &lt;NA&gt; 2007\n5 female 2007\n6   male 2007"
+  },
+  {
+    "objectID": "posts/r-penguins/index.html#understanding-the-dataset",
+    "href": "posts/r-penguins/index.html#understanding-the-dataset",
+    "title": "Exploring Palmer Penguins with R",
+    "section": "Understanding the dataset",
+    "text": "Understanding the dataset\nI first check the size of the dataset and count the missing values in each variable.\n\ncat(\"Number of observations:\", nrow(penguins), \"\\n\")\n\nNumber of observations: 344 \n\ncat(\"Number of variables:\", ncol(penguins), \"\\n\")\n\nNumber of variables: 8 \n\ncolSums(is.na(penguins))\n\n          species            island    bill_length_mm     bill_depth_mm \n                0                 0                 2                 2 \nflipper_length_mm       body_mass_g               sex              year \n                2                 2                11                 0 \n\n\nThe dataset contains measurements for individual penguins from three species. Some variables contain missing observations, so these need to be considered before calculating summaries."
+  },
+  {
+    "objectID": "posts/r-penguins/index.html#preparing-the-data",
+    "href": "posts/r-penguins/index.html#preparing-the-data",
+    "title": "Exploring Palmer Penguins with R",
+    "section": "Preparing the data",
+    "text": "Preparing the data\nFor this analysis, I focus on species, body mass, bill length, and bill depth. I remove rows that have missing values in any of these variables.\n\nanalysis_penguins &lt;- penguins[\n  complete.cases(\n    penguins[, c(\"species\", \"body_mass_g\", \"bill_length_mm\", \"bill_depth_mm\")]\n  ),\n  c(\"species\", \"body_mass_g\", \"bill_length_mm\", \"bill_depth_mm\")\n]\n\ncat(\"Rows before removing missing values:\", nrow(penguins), \"\\n\")\n\nRows before removing missing values: 344 \n\ncat(\"Rows after removing missing values:\", nrow(analysis_penguins), \"\\n\")\n\nRows after removing missing values: 342 \n\nhead(analysis_penguins)\n\n  species body_mass_g bill_length_mm bill_depth_mm\n1  Adelie        3750           39.1          18.7\n2  Adelie        3800           39.5          17.4\n3  Adelie        3250           40.3          18.0\n5  Adelie        3450           36.7          19.3\n6  Adelie        3650           39.3          20.6\n7  Adelie        3625           38.9          17.8\n\n\nRemoving incomplete observations ensures that the summaries and plots below are based on penguins with all of the measurements required for this analysis."
+  },
+  {
+    "objectID": "posts/r-penguins/index.html#comparing-species",
+    "href": "posts/r-penguins/index.html#comparing-species",
+    "title": "Exploring Palmer Penguins with R",
+    "section": "Comparing species",
+    "text": "Comparing species\nNext, I calculate the average body mass, bill length, and bill depth for each penguin species.\n\nspecies_summary &lt;- aggregate(\n  cbind(body_mass_g, bill_length_mm, bill_depth_mm) ~ species,\n  data = analysis_penguins,\n  FUN = mean\n)\n\nspecies_summary[, -1] &lt;- round(species_summary[, -1], 1)\n\nspecies_summary\n\n    species body_mass_g bill_length_mm bill_depth_mm\n1    Adelie      3700.7           38.8          18.3\n2 Chinstrap      3733.1           48.8          18.4\n3    Gentoo      5076.0           47.5          15.0\n\n\nThe summary shows that the three species differ in their typical body measurements. Gentoo penguins have the greatest average body mass, while the species also show noticeable differences in average bill length and bill depth."
+  },
+  {
+    "objectID": "posts/r-penguins/index.html#body-mass-by-species",
+    "href": "posts/r-penguins/index.html#body-mass-by-species",
+    "title": "Exploring Palmer Penguins with R",
+    "section": "Body mass by species",
+    "text": "Body mass by species\nTo see the differences in body mass more clearly, I create a boxplot for the three penguin species.\n\nboxplot(\n  body_mass_g ~ species,\n  data = analysis_penguins,\n  xlab = \"Species\",\n  ylab = \"Body mass (g)\",\n  main = \"Body mass by penguin species\"\n)\n\n\n\n\n\n\n\nFigure 1: Distribution of body mass across the three Palmer penguin species.\n\n\n\n\n\nThe figure shows clear differences in body mass among the species. Gentoo penguins tend to have higher body mass values than Adelie and Chinstrap penguins."
+  },
+  {
+    "objectID": "posts/r-penguins/index.html#relationship-between-bill-measurements",
+    "href": "posts/r-penguins/index.html#relationship-between-bill-measurements",
+    "title": "Exploring Palmer Penguins with R",
+    "section": "Relationship between bill measurements",
+    "text": "Relationship between bill measurements\nFinally, I calculate the correlation between bill length and bill depth separately for each species.\n\nbill_correlations &lt;- sapply(\n  split(analysis_penguins, analysis_penguins$species),\n  function(group) {\n    cor(group$bill_length_mm, group$bill_depth_mm)\n  }\n)\n\nround(bill_correlations, 3)\n\n   Adelie Chinstrap    Gentoo \n    0.391     0.654     0.643 \n\n\nThese values show how bill length and bill depth are related within each species. Calculating the correlations separately avoids mixing the three species together when examining this relationship."
+  },
+  {
+    "objectID": "posts/r-penguins/index.html#conclusion",
+    "href": "posts/r-penguins/index.html#conclusion",
+    "title": "Exploring Palmer Penguins with R",
+    "section": "Conclusion",
+    "text": "Conclusion\nThis analysis used R to explore differences in body and bill measurements among Palmer penguin species. After checking for missing data and preparing a complete dataset, I compared average measurements across species and visualized the distribution of body mass.\nThe results show clear differences among Adelie, Chinstrap, and Gentoo penguins. Gentoo penguins are heavier on average, and the species also differ in their bill measurements. The analysis demonstrates how data cleaning, summary statistics, visualization, and correlation can be used to explore a biological dataset in R."
+  },
+  {
     "objectID": "posts/first-weeks/index.html",
     "href": "posts/first-weeks/index.html",
     "title": "My first weeks in MDS",
     "section": "",
-    "text": "Orientation day on campus.\n\n\nthe orientation lasted for 3 days. there were many fun activities and informative events. on day one we got to know about our faculity and also played a bingo game which allowed studends to interact with each other. next day we have some activities and got to meet few of the cohorts alumni’s who shared their insights with us. the last day was focused on dinner party where we served many delicious dishes. although we felt little sad that this period was over, but it gave us a huge confidence for the future"
+    "text": "Orientation day on campus."
+  },
+  {
+    "objectID": "posts/first-weeks/index.html#orientation-week",
+    "href": "posts/first-weeks/index.html#orientation-week",
+    "title": "My first weeks in MDS",
+    "section": "Orientation Week",
+    "text": "Orientation Week\nThe orientation lasted for three days. There were many fun activities and informative events.\nOn day one, we got to know about our faculty and also played a bingo game, which allowed students to interact with each other.\nThe next day, we had some activities and got to meet a few of the cohort alumni, who shared their insights with us.\nThe last day was focused on a dinner party where we were served many delicious dishes. Although we felt a little sad that this period was over, it gave us huge confidence for the future!"
   },
   {
     "objectID": "blog.html",
     "href": "blog.html",
     "title": "Blog",
     "section": "",
-    "text": "My first weeks in MDS\n\n\n\n\n\n\n\n\nAug 9, 2026\n\n\nYuvraj Singh Walia\n\n\n\n\n\nNo matching items"
+    "text": "Exploring the Palmer Penguins with Python\n\n\n\n\n\n\n\n\nSep 23, 2026\n\n\nYuvraj Singh Walia\n\n\n\n\n\n\n\n\n\n\n\n\nExploring Palmer Penguins with R\n\n\n\n\n\n\n\n\nSep 23, 2026\n\n\nYuvraj Singh Walia\n\n\n\n\n\n\n\n\n\n\n\n\nMy first weeks in MDS\n\n\n\n\n\n\n\n\nAug 9, 2026\n\n\nYuvraj Singh Walia\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -26,5 +96,68 @@
     "title": "Yuvraj Singh Walia",
     "section": "",
     "text": "Hi, I’m Yuvraj Singh Walia, originally from India, where I completed my Bachelor of Technology in Computer Science and Engineering. My curiosity about data, technology, and the ways they can be used to solve real-world problems led me to pursue the Master of Data Science at UBC. Before starting this journey, I worked as a Quality Analyst on a product team, where I gained valuable experience in problem-solving, software testing, and working with technology-driven products. Outside of academics and Data Science, I enjoy listening to music, writing songs and poetry, meeting new people, and learning from different perspectives. I’m excited to make the most of my time at UBC, continue growing both personally and professionally, and explore where my journey in Data Science takes me."
+  },
+  {
+    "objectID": "posts/penguins-python/index.html",
+    "href": "posts/penguins-python/index.html",
+    "title": "Exploring the Palmer Penguins with Python",
+    "section": "",
+    "text": "In this post, I explore the Palmer Penguins dataset using Python. I will compare the body measurements of different penguin species and investigate the relationship between flipper length and body mass.\nData: Palmer Penguins, Palmer Station Antarctica LTER.\nThe Palmer Penguins dataset was collected by Dr. Kristen Gorman and the Palmer Station Long Term Ecological Research program. The dataset is available under the CC0 licence."
+  },
+  {
+    "objectID": "posts/penguins-python/index.html#introduction",
+    "href": "posts/penguins-python/index.html#introduction",
+    "title": "Exploring the Palmer Penguins with Python",
+    "section": "",
+    "text": "In this post, I explore the Palmer Penguins dataset using Python. I will compare the body measurements of different penguin species and investigate the relationship between flipper length and body mass.\nData: Palmer Penguins, Palmer Station Antarctica LTER.\nThe Palmer Penguins dataset was collected by Dr. Kristen Gorman and the Palmer Station Long Term Ecological Research program. The dataset is available under the CC0 licence."
+  },
+  {
+    "objectID": "posts/penguins-python/index.html#checking-the-python-environment",
+    "href": "posts/penguins-python/index.html#checking-the-python-environment",
+    "title": "Exploring the Palmer Penguins with Python",
+    "section": "Checking the Python environment",
+    "text": "Checking the Python environment\nFirst, I check which Python executable is being used when this post is rendered.\n\nimport sys\nprint(sys.executable)\n\nC:\\Users\\Yuvraj Singh Walia\\Documents\\521\\DSCI_521-milestone_2\\yuvrajw.github.io\\.venv\\Scripts\\python.exe\n\n\nThe path should point to the .venv directory inside this repository."
+  },
+  {
+    "objectID": "posts/penguins-python/index.html#loading-the-data",
+    "href": "posts/penguins-python/index.html#loading-the-data",
+    "title": "Exploring the Palmer Penguins with Python",
+    "section": "Loading the data",
+    "text": "Loading the data\nI load the Palmer Penguins dataset and inspect the first few observations.\n\nfrom palmerpenguins import load_penguins\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\npenguins = load_penguins()\npenguins.head()\n\n\n\n\n\n\n\n\nspecies\nisland\nbill_length_mm\nbill_depth_mm\nflipper_length_mm\nbody_mass_g\nsex\nyear\n\n\n\n\n0\nAdelie\nTorgersen\n39.1\n18.7\n181.0\n3750.0\nmale\n2007\n\n\n1\nAdelie\nTorgersen\n39.5\n17.4\n186.0\n3800.0\nfemale\n2007\n\n\n2\nAdelie\nTorgersen\n40.3\n18.0\n195.0\n3250.0\nfemale\n2007\n\n\n3\nAdelie\nTorgersen\nNaN\nNaN\nNaN\nNaN\nNaN\n2007\n\n\n4\nAdelie\nTorgersen\n36.7\n19.3\n193.0\n3450.0\nfemale\n2007"
+  },
+  {
+    "objectID": "posts/penguins-python/index.html#understanding-the-dataset",
+    "href": "posts/penguins-python/index.html#understanding-the-dataset",
+    "title": "Exploring the Palmer Penguins with Python",
+    "section": "Understanding the dataset",
+    "text": "Understanding the dataset\nBefore comparing the penguin species, I first examine the size of the dataset, the available variables, and the amount of missing data.\n\nprint(f\"Number of observations: {penguins.shape[0]}\")\nprint(f\"Number of variables: {penguins.shape[1]}\")\n\nmissing_values = penguins.isna().sum()\nmissing_values\n\nNumber of observations: 344\nNumber of variables: 8\n\n\nspecies               0\nisland                0\nbill_length_mm        2\nbill_depth_mm         2\nflipper_length_mm     2\nbody_mass_g           2\nsex                  11\nyear                  0\ndtype: int64\n\n\nThe dataset contains measurements and identifying information for individual penguins. Checking the missing values is important because incomplete observations could affect calculations involving body measurements.\nI will focus on species, flipper length, and body mass. I remove observations that are missing either of the two numerical measurements needed for the analysis.\n\nanalysis_penguins = (\n    penguins[\n        [\"species\", \"flipper_length_mm\", \"body_mass_g\"]\n    ]\n    .dropna()\n)\n\nprint(f\"Rows before removing missing values: {len(penguins)}\")\nprint(f\"Rows after removing missing values: {len(analysis_penguins)}\")\n\nanalysis_penguins.head()\n\nRows before removing missing values: 344\nRows after removing missing values: 342\n\n\n\n\n\n\n\n\n\nspecies\nflipper_length_mm\nbody_mass_g\n\n\n\n\n0\nAdelie\n181.0\n3750.0\n\n\n1\nAdelie\n186.0\n3800.0\n\n\n2\nAdelie\n195.0\n3250.0\n\n\n4\nAdelie\n193.0\n3450.0\n\n\n5\nAdelie\n190.0\n3650.0\n\n\n\n\n\n\n\nAfter removing observations with missing flipper-length or body-mass values, the remaining data can be used to compare the three penguin species and study the relationship between these measurements."
+  },
+  {
+    "objectID": "posts/penguins-python/index.html#comparing-the-penguin-species",
+    "href": "posts/penguins-python/index.html#comparing-the-penguin-species",
+    "title": "Exploring the Palmer Penguins with Python",
+    "section": "Comparing the penguin species",
+    "text": "Comparing the penguin species\nNext, I calculate the number of penguins and the average flipper length and body mass for each species.\n\nspecies_summary = (\n    analysis_penguins\n    .groupby(\"species\")\n    .agg(\n        number_of_penguins=(\"species\", \"size\"),\n        mean_flipper_length_mm=(\"flipper_length_mm\", \"mean\"),\n        mean_body_mass_g=(\"body_mass_g\", \"mean\")\n    )\n    .round(1)\n)\n\nspecies_summary\n\n\n\n\n\n\n\n\nnumber_of_penguins\nmean_flipper_length_mm\nmean_body_mass_g\n\n\nspecies\n\n\n\n\n\n\n\nAdelie\n151\n190.0\n3700.7\n\n\nChinstrap\n68\n195.8\n3733.1\n\n\nGentoo\n123\n217.2\n5076.0\n\n\n\n\n\n\n\nThe summary shows clear differences between the three species. Gentoo penguins have the greatest average body mass and the longest average flipper length, while Adelie penguins are smaller on average. Chinstrap penguins fall between the other two species for these measurements."
+  },
+  {
+    "objectID": "posts/penguins-python/index.html#relationship-between-flipper-length-and-body-mass",
+    "href": "posts/penguins-python/index.html#relationship-between-flipper-length-and-body-mass",
+    "title": "Exploring the Palmer Penguins with Python",
+    "section": "Relationship between flipper length and body mass",
+    "text": "Relationship between flipper length and body mass\nTo investigate whether larger penguins tend to have longer flippers, I plot flipper length against body mass and distinguish the points by species.\n\nfig, ax = plt.subplots(figsize=(8, 5))\n\nfor species, group in analysis_penguins.groupby(\"species\", observed=True):\n    ax.scatter(\n        group[\"flipper_length_mm\"],\n        group[\"body_mass_g\"],\n        label=species,\n        alpha=0.7\n    )\n\nax.set_xlabel(\"Flipper length (mm)\")\nax.set_ylabel(\"Body mass (g)\")\nax.set_title(\"Body mass and flipper length by species\")\nax.legend(title=\"Species\")\n\nplt.show()\n\n\n\n\n\n\n\nFigure 1: Relationship between flipper length and body mass for Palmer penguins.\n\n\n\n\n\nThe plot shows a positive relationship between flipper length and body mass. Penguins with longer flippers generally have greater body mass. The species also form distinct groups, with Gentoo penguins tending to be both heavier and longer-flippered than Adelie and Chinstrap penguins."
+  },
+  {
+    "objectID": "posts/penguins-python/index.html#measuring-the-relationship",
+    "href": "posts/penguins-python/index.html#measuring-the-relationship",
+    "title": "Exploring the Palmer Penguins with Python",
+    "section": "Measuring the relationship",
+    "text": "Measuring the relationship\nThe scatter plot suggests that flipper length and body mass are positively related. I calculate the correlation between these two measurements for each species to quantify that relationship.\n\ncorrelations = (\n    analysis_penguins\n    .groupby(\"species\")\n    .apply(\n        lambda group: group[\"flipper_length_mm\"].corr(group[\"body_mass_g\"]),\n        include_groups=False\n    )\n    .rename(\"correlation\")\n    .round(3)\n)\n\ncorrelations\n\nspecies\nAdelie       0.468\nChinstrap    0.642\nGentoo       0.703\nName: correlation, dtype: float64\n\n\nA positive correlation means that penguins with longer flippers also tend to have greater body mass within that species. Comparing the values across the three species shows whether this relationship is similar or different among Adelie, Chinstrap, and Gentoo penguins."
+  },
+  {
+    "objectID": "posts/penguins-python/index.html#conclusion",
+    "href": "posts/penguins-python/index.html#conclusion",
+    "title": "Exploring the Palmer Penguins with Python",
+    "section": "Conclusion",
+    "text": "Conclusion\nThis analysis explored body measurements in the Palmer Penguins dataset using Python. After checking and cleaning the data, I compared average flipper length and body mass across species and visualized the relationship between these two measurements.\nThe results show clear differences in body size among the penguin species. The scatter plot and correlation calculations also show that flipper length and body mass are positively associated within the data. Overall, the analysis demonstrates how data cleaning, grouping, summary statistics, and visualization can be used together to investigate patterns in a biological dataset."
   }
 ]
